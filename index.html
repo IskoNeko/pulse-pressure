@@ -1,0 +1,162 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#f2f5f8">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="apple-mobile-web-app-title" content="Pulse & Pressure">
+  <meta name="description" content="Private personal blood pressure journal.">
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="apple-touch-icon" href="icon-192.png">
+  <link rel="stylesheet" href="styles.css">
+  <title>Pulse & Pressure</title>
+</head>
+<body>
+  <div class="app-shell">
+    <header class="topbar">
+      <div class="brand">
+        <div class="brand-icon" aria-hidden="true">♥</div>
+        <div><div class="brand-name">Pulse &amp; Pressure</div><div class="brand-sub">PERSONAL HEALTH JOURNAL</div></div>
+      </div>
+      <button id="themeToggle" class="icon-button" aria-label="Toggle appearance" title="Toggle appearance">◐</button>
+    </header>
+
+    <nav class="tabs" aria-label="Main navigation">
+      <button class="tab active" data-view="dashboard">Overview</button>
+      <button class="tab" data-view="history">History</button>
+      <button class="tab" data-view="reminders">Reminders</button>
+      <button class="tab" data-view="profile">Profile</button>
+    </nav>
+
+    <main>
+      <section id="dashboard" class="view active">
+        <div class="section-heading">
+          <div><p class="eyebrow" id="todayLabel">YOUR HEALTH SNAPSHOT</p><h1>Overview</h1></div>
+          <span class="live-pill"><span></span> Private on this device</span>
+        </div>
+
+        <article class="hero-card">
+          <div class="hero-top"><span class="card-kicker">LATEST BLOOD PRESSURE</span><span class="unit">mmHg</span></div>
+          <div class="bp-reading"><span id="latestSys">—</span><i>/</i><span id="latestDia">—</span></div>
+          <div id="latestCategory" class="category neutral">No readings yet</div>
+          <div class="hero-foot">
+            <div><span class="metric-label">Heart rate</span><strong id="latestPulse">— <small>bpm</small></strong></div>
+            <div><span class="metric-label">Recorded</span><strong id="latestWhen">No data</strong></div>
+          </div>
+        </article>
+
+        <div class="section-heading compact"><div><p class="eyebrow">YOUR RECENT PATTERN</p><h2>Trends</h2></div><span class="muted small">Last 7 days</span></div>
+        <div class="stats-grid">
+          <article class="stat-card"><div class="stat-icon coral">↗</div><span class="metric-label">Average systolic</span><strong id="avgSys">—</strong><small>mmHg</small></article>
+          <article class="stat-card"><div class="stat-icon blue">↘</div><span class="metric-label">Average diastolic</span><strong id="avgDia">—</strong><small>mmHg</small></article>
+          <article class="stat-card"><div class="stat-icon purple">♥</div><span class="metric-label">Average heart rate</span><strong id="avgPulse">—</strong><small>bpm</small></article>
+          <article class="stat-card"><div class="stat-icon mint">▦</div><span class="metric-label">Measurements</span><strong id="weekCount">0</strong><small>last 7 days</small></article>
+        </div>
+
+        <article class="panel">
+          <div class="panel-heading"><div><p class="eyebrow">BLOOD PRESSURE</p><h2>Recent readings</h2></div><button class="text-button" data-goto="history">View all →</button></div>
+          <div id="miniChart" class="chart-wrap"><div class="empty-state">Your chart will appear after you record a few measurements.</div></div>
+          <div class="legend"><span><i class="dot systolic"></i>Systolic</span><span><i class="dot diastolic"></i>Diastolic</span></div>
+        </article>
+
+        <article class="panel reminder-summary">
+          <div class="panel-heading"><div><p class="eyebrow">YOUR ROUTINE</p><h2>Next reminder</h2></div><button class="text-button" data-goto="reminders">Manage →</button></div>
+          <div id="nextReminder" class="reminder-line"><div class="reminder-icon">◷</div><div><strong>No reminder scheduled</strong><p>Set a time that works for you.</p></div></div>
+        </article>
+
+        <div class="notice"><strong>Important:</strong> This journal is an organizational tool, not a medical device. It does not diagnose hypertension or replace professional medical advice.</div>
+      </section>
+
+      <section id="history" class="view">
+        <div class="section-heading"><div><p class="eyebrow">YOUR MEASUREMENTS</p><h1>History</h1></div><button id="exportBtn" class="secondary-button">Export CSV</button></div>
+        <article class="panel">
+          <div class="panel-heading"><div><p class="eyebrow">TREND VIEW</p><h2>Blood pressure</h2></div><select id="rangeSelect" aria-label="Chart range"><option value="7">7 days</option><option value="30" selected>30 days</option><option value="90">90 days</option></select></div>
+          <div id="historyChart" class="chart-wrap"><div class="empty-state">No measurements to chart yet.</div></div>
+          <div class="legend"><span><i class="dot systolic"></i>Systolic</span><span><i class="dot diastolic"></i>Diastolic</span></div>
+        </article>
+        <div class="section-heading compact"><div><p class="eyebrow">RECORD LOG</p><h2>All readings</h2></div><span id="recordCount" class="muted small">0 records</span></div>
+        <div id="readingList" class="reading-list"><div class="empty-state panel">Your saved measurements will appear here.</div></div>
+      </section>
+
+      <section id="reminders" class="view">
+        <div class="section-heading"><div><p class="eyebrow">BUILD A CONSISTENT ROUTINE</p><h1>Reminders</h1></div></div>
+        <article class="panel">
+          <div class="setting-row"><div><strong>Measurement reminders</strong><p>Choose the times you want to be prompted.</p></div><label class="switch"><input id="reminderEnabled" type="checkbox"><span></span></label></div>
+          <div class="divider"></div>
+          <div class="reminder-form">
+            <label class="field"><span>Morning time</span><input id="morningTime" type="time" value="08:00"></label>
+            <label class="field"><span>Evening time</span><input id="eveningTime" type="time" value="20:00"></label>
+            <label class="field"><span>Repeat on</span><select id="reminderDays"><option value="everyday">Every day</option><option value="weekdays">Weekdays</option><option value="weekends">Weekends</option></select></label>
+            <button id="saveReminders" class="primary-button">Save reminder schedule</button>
+          </div>
+          <div id="reminderStatus" class="inline-status">Reminders are currently off.</div>
+        </article>
+        <article class="panel">
+          <div class="panel-heading"><div><p class="eyebrow">HOW REMINDERS WORK</p><h2>Notification availability</h2></div><span class="info-badge">iOS</span></div>
+          <p class="body-copy">This first version checks reminder times when the app is open. A Safari web app cannot reliably wake itself at a scheduled time while closed. Reliable background notifications require a push-notification service and an internet connection; that can be added in a later version.</p>
+          <button id="notifyPermission" class="secondary-button full-width">Check notification permission</button>
+          <p id="permissionStatus" class="muted small">Browser notification permission has not been checked.</p>
+        </article>
+        <div class="notice"><strong>Measurement tip:</strong> Sit quietly for five minutes before measuring. Take two readings about one minute apart and record both.</div>
+      </section>
+
+      <section id="profile" class="view">
+        <div class="section-heading"><div><p class="eyebrow">PERSONAL CONTEXT</p><h1>Health profile</h1></div></div>
+        <article class="panel">
+          <p class="body-copy">These details help provide context for your records. They do not change the standard adult blood pressure categories.</p>
+          <form id="profileForm" class="form-grid">
+            <label class="field"><span>Date of birth</span><input id="dob" type="date"></label>
+            <label class="field"><span>Sex for clinical context</span><select id="sex"><option value="">Prefer not to say / not set</option><option value="female">Female</option><option value="male">Male</option><option value="other">Another / not specified</option></select></label>
+            <label class="field"><span>Height (cm)</span><input id="height" type="number" min="50" max="250" step="0.1" placeholder="e.g. 180"></label>
+            <label class="field"><span>Current weight (kg)</span><input id="weight" type="number" min="10" max="400" step="0.1" placeholder="e.g. 85"></label>
+            <div class="bmi-box"><span class="metric-label">Calculated BMI</span><strong id="bmiValue">—</strong><small id="bmiText">Enter height and weight</small></div>
+            <div class="field full"><span>Relevant health context (optional)</span><div class="check-grid">
+              <label><input type="checkbox" id="riskDiabetes"> Diabetes</label>
+              <label><input type="checkbox" id="riskKidney"> Kidney disease</label>
+              <label><input type="checkbox" id="riskCholesterol"> High cholesterol</label>
+              <label><input type="checkbox" id="riskSmoking"> Current smoker</label>
+              <label><input type="checkbox" id="riskFamily"> Family history of cardiovascular disease</label>
+              <label><input type="checkbox" id="riskMedication"> Taking blood pressure medication</label>
+            </div></div>
+            <label class="field full"><span>Medication / other notes</span><textarea id="profileNotes" rows="3" placeholder="Optional context for your own records"></textarea></label>
+            <button class="primary-button full" type="submit">Save health profile</button>
+          </form>
+          <div id="profileStatus" class="inline-status" aria-live="polite"></div>
+        </article>
+        <article class="panel privacy-panel"><div class="privacy-icon">⌑</div><div><strong>Your data stays on this device</strong><p>Version 1 stores records in this browser's local storage. Clearing Safari website data, removing the app's site data, or changing devices may erase your records. This is not encrypted medical storage. Export a backup periodically and protect your iPhone with its passcode.</p></div></article>
+        <button id="clearData" class="danger-button">Delete all app data</button>
+      </section>
+    </main>
+
+    <button id="addButton" class="fab" aria-label="Record blood pressure">＋ <span>Record</span></button>
+    <footer>Pulse &amp; Pressure <span>•</span> Version 1.0</footer>
+  </div>
+
+  <div id="entryModal" class="modal hidden" role="dialog" aria-modal="true" aria-labelledby="entryTitle">
+    <div class="modal-backdrop" data-close="true"></div>
+    <div class="modal-card">
+      <div class="modal-header"><div><p class="eyebrow">NEW MEASUREMENT</p><h2 id="entryTitle">Record blood pressure</h2></div><button id="closeModal" class="icon-button" aria-label="Close">×</button></div>
+      <form id="readingForm">
+        <div class="bp-inputs">
+          <label class="field"><span>Systolic <small>mmHg</small></span><input id="systolic" type="number" min="50" max="300" required placeholder="120"></label>
+          <div class="slash">/</div>
+          <label class="field"><span>Diastolic <small>mmHg</small></span><input id="diastolic" type="number" min="30" max="200" required placeholder="80"></label>
+        </div>
+        <label class="field"><span>Heart rate <small>bpm · optional</small></span><input id="pulse" type="number" min="20" max="250" placeholder="72"></label>
+        <div class="form-grid">
+          <label class="field"><span>Date and time</span><input id="readingDate" type="datetime-local" required></label>
+          <label class="field"><span>Arm</span><select id="arm"><option value="Left">Left</option><option value="Right">Right</option><option value="Not specified">Not specified</option></select></label>
+          <label class="field"><span>Position</span><select id="position"><option value="Sitting">Sitting</option><option value="Standing">Standing</option><option value="Lying down">Lying down</option></select></label>
+          <label class="field full"><span>Notes (optional)</span><textarea id="readingNotes" rows="2" placeholder="How were you feeling? Any relevant context?"></textarea></label>
+        </div>
+        <div id="readingFeedback" class="reading-feedback hidden"></div>
+        <button type="submit" class="primary-button full">Save measurement</button>
+      </form>
+    </div>
+  </div>
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+  <script src="app.js"></script>
+</body>
+</html>
